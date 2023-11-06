@@ -1,11 +1,8 @@
 import os
+import char
+CHAR = char.TEKKEN_CHARACTER
+
 TEKKEN_SERIES = ["1", "2", "3", "4", "5", "6", "7", "8", "tt1", "tt2"]
-TEKKEN_CHARACTER = {"7":{ # tekken_character = {series:{number:character}, series:{number:character}}
-    "1" : "Ganryu", "2" : "Gigas", "3" : "Geese", "4" : "Negan", "5" : "Noctis", 
-    "6" : "Nina", "7" : "Devil_Jin", "8" : "Dragunov", "9" : "Lars", "10" : "Chloe", 
-    "11" : "Leo", "12" : "Lei_Wulong", "13" : "Law", "14" : "Lee_Chaolan", "15" : "Lidia", 
-    "16" : "Leroy", "17" : "Lili", "18" : "Master_Raven", "19" : "Marduk", "20" : "Miguel" 
-    }}
 PATH = "/Users/gangchanhwi/Desktop/PERSONAL_PROJECT/tekken_command_list" # 유저 개인 파일 저장 경로
 TEXT = "made_by_chanhwi___"
 
@@ -45,29 +42,55 @@ def isCorrectCharacter():
     while True:
         inputCharacter = input("캐릭터 선택(예: 간류를 원한다면 1 입력): ")
         
-        if inputCharacter in TEKKEN_CHARACTER[seriesChoice]:
-            characterFilePath = os.path.join(PATH, seriesChoice, TEKKEN_CHARACTER[seriesChoice][inputCharacter]+".txt")
+        if inputCharacter in CHAR[seriesChoice]:
+            characterFilePath = os.path.join(PATH, seriesChoice, CHAR[seriesChoice][inputCharacter]+".txt")
             makeCharacterFile(characterFilePath)
-            return inputCharacter
+            return characterFilePath
         else:
             print("올바른 캐릭터의 번호를 입력바람")
 
-def makeCharacterFile(characterFilePath):
-    if os.path.isfile(characterFilePath): 
+def makeCharacterFile(FilePath):
+    if os.path.isfile(FilePath): 
         pass
     else:
-        with open(characterFilePath, "a+") as file:
+        with open(FilePath, "a+") as file:
             file.write(TEXT)
 
-def ReadWriteCommand(characterFilePath):
-    print(characterFilePath)
-    with open(characterFilePath, "r+") as file:
-        print(file.write())
+def ReadWriteCharacterFile(FilePath):
+    with open(FilePath, "r") as file:
+        print("-" * 77)
+        print(f"{'파일 내용':^77}")
+        print(file.read())
+        print("-" * 77)
+    while True:
+        userInput = int(input("편집은 1, 대체 단어 편집은 2, 다른 캐릭 선택은 3, 다른 시리즈 선택은 4, 종료는 0"))
+        if userInput == 1: 
+            userInput = int(input("마지막 줄에 커맨드 입력은 1"))
+            if userInput == 1:
+                text_input = input("저장할 커맨드를 입력해")
+                for i in text_input:
+                    pass
+                with open(FilePath, "a+") as file:
+                    file.write(f"\n{text_input}")
+            else:
+                pass
+        elif userInput == 2:
+            print("222222222")
+        elif userInput == 3:
+            print("333333333")
+            return 1
+        elif userInput == 4:
+            print("444444444")
+            return 0
+        elif userInput == 0:
+            print("000000000")
+            return 0 # 프로그램 종료되게
+    
 stage = 0
-seriesChoice = 0
+seriesChoice = ""
 characterNameChoice = ""
 characterFileName = ""
-characterFilePath = ""
+
 while True:
     if stage == 0:  # 시리즈 확인
         seriesChoice = isCorrectSeries()
@@ -76,7 +99,7 @@ while True:
         printCharacterList(seriesChoice)
         stage += 1
     elif stage == 2: # 캐릭터 선택
-        characterNumChoice = isCorrectCharacter()
+        characterFilePath = isCorrectCharacter()
         stage += 1
     elif stage == 3: # 커맨드 리스트 확인 및 편집
-        ReadWriteCommand(characterFilePath)
+        stage = ReadWriteCharacterFile(characterFilePath)
